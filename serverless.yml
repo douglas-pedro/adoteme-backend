@@ -1,0 +1,61 @@
+service: adote-me-service
+
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  useDotenv: true
+  environment:
+    AWS_COGNITO_CLIENT_ID: ${env:AWS_COGNITO_CLIENT_ID}
+
+functions:
+  createUser:
+    handler: src/user/signup-user.signUp
+    events:
+      - http:
+          path: create-user
+          method: post
+  confirmUser:
+    handler: src/user/confirm-signup-user.confirmSignUp
+    events:
+      - http:
+          path: confirm-sign-up-user
+          method: post
+  resendConfirmationCodeUser:
+    handler: src/user/resend-confirm-code-user.resendConfirmationCode
+    events:
+      - http:
+          path: resend-confirmation-code-user
+          method: post
+  signInUser:
+    handler: src/user/signin-user.signIn
+    events:
+      - http:
+          path: sign-in-user
+          method: post
+  logout:
+    handler: src/user/logout-user.logout
+    events:
+      - http:
+          path: logout
+          method: post
+  forgotPasswordUser:
+    handler: src/user/forgot-password-user.forgotPassword
+    events:
+      - http:
+          path: forgot-password-user
+          method: post
+  confirmForgotPasswordUser:
+    handler: src/user/confirm-forgot-password-user.confirmForgotPassword
+    events:
+      - http:
+          path: confirm-forgot-password-user
+          method: post
+
+plugins:
+  - serverless-offline
+
+package:
+  individually: true
