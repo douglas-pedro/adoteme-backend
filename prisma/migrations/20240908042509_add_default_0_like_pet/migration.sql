@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Pet" ALTER COLUMN "like" SET DEFAULT 0;

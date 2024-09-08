@@ -11,6 +11,7 @@ interface CreateUserEvent {
   email: string
   phoneNumber: string
   cep: string
+  address: string
   city: string
   complement: string
   district: string
@@ -63,6 +64,10 @@ export const signUp: APIGatewayProxyHandler = async (event) => {
       {
         Name: 'custom:cep',
         Value: body.cep,
+      },
+      {
+        Name: 'address',
+        Value: body.address,
       },
       {
         Name: 'custom:city',

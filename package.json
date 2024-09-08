@@ -4,19 +4,28 @@
   "description": "",
   "main": "handler.js",
   "scripts": {
+    "dev": "serverless offline --aws-profile adoteme && docker-compose up -d",
     "build": "tsc",
-    "deploy": "serverless deploy",
-    "offline": "serverless offline",
+    "deploy": "serverless deploy serverless offline",
+    "offline": "serverless offline --aws-profile adoteme",
     "prebuild": "rimraf ./dist"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "serverless": "^3.20.0"
+    "@prisma/client": "^5.19.1",
+    "dotenv": "^16.4.5",
+    "fs": "^0.0.1-security",
+    "prisma": "^5.19.1",
+    "serverless": "^3.20.0",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.76",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^18.11.9",
+    "@types/uuid": "^10.0.0",
     "rimraf": "^3.0.2",
     "serverless-offline": "^14.0.0",
     "ts-node": "^10.9.1",

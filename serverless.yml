@@ -1,14 +1,16 @@
 service: adote-me-service
 
-frameworkVersion: '4'
+frameworkVersion: '3'
 
 provider:
   name: aws
   runtime: nodejs18.x
+  profile: adoteme
   region: us-east-1
   useDotenv: true
-  environment:
-    AWS_COGNITO_CLIENT_ID: ${env:AWS_COGNITO_CLIENT_ID}
+  # environment:
+  #   AWS_COGNITO_CLIENT_ID: ${env:AWS_COGNITO_CLIENT_ID}
+  #   AWS_COGNITO_USER_POOL_ID: ${env:AWS_COGNITO_USER_POOL_ID}
 
 functions:
   createUser:
@@ -53,9 +55,33 @@ functions:
       - http:
           path: confirm-forgot-password-user
           method: post
+  verifyEmailUser:
+    handler: src/user/verify-email-user.checkEmail
+    events:
+      - http:
+          path: verify-email-user
+          method: post
+  addNewPet:
+    handler: src/pet/add-new-pet.createPet
+    events:
+      - http:
+          path: add-new-pet
+          method: post
+  listPets:
+    handler: src/pet/get-pets.listPets
+    events:
+      - http:
+          path: get-pets
+          method: post
 
 plugins:
+  - serverless-dotenv-plugin
   - serverless-offline
+
+custom:
+  # serverless offline plugin setup
+  serverless-offline:
+    httpPort: 4000
 
 package:
   individually: true
