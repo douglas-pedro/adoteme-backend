@@ -27,14 +27,13 @@ export const listPets: APIGatewayProxyHandler = async (event) => {
     age,
     special_condition,
     state,
-    limit = 10, // Número de pets por página
+    limit = 10,
     cursor,
-    idCognito, // Capturar o idCognito
+    idCognito,
   } = data
 
   const filters: any = {}
 
-  // Construção dos filtros dinamicamente
   if (id) {
     filters.id = Number(id)
   }
@@ -63,7 +62,7 @@ export const listPets: APIGatewayProxyHandler = async (event) => {
 
   if (idCognito) {
     filters.userPet = {
-      idCognito, // Filtro pelo idCognito no relacionamento com UserPet
+      idCognito,
     }
   }
 
@@ -82,7 +81,6 @@ export const listPets: APIGatewayProxyHandler = async (event) => {
       },
     })
 
-    // Processar imagens em base64 como antes
     const petsWithImagesInBase64 = await Promise.all(
       pets.map(async (pet) => {
         const imagesInBase64 = await Promise.all(
