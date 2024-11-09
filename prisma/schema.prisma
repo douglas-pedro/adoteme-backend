@@ -14,28 +14,29 @@ datasource db {
 }
 
 model UserPet {
-  id         Int      @id @default(autoincrement())
-  idCognito  String   @unique
-  pets       Pet[]    
+  id                Int                @id @default(autoincrement())
+  idCognito         String             @unique
+  pets              Pet[]    
+  adoptionRequests  AdoptionRequest[]  
 }
 
 model Pet {
-  id                Int         @id @default(autoincrement())
+  id                Int                @id @default(autoincrement())
   name              String
   type              String
   gender            String
   age               Int
-  special_condition String?     @default("Nenhuma")
-  adoption          Boolean     @default(true)
-  like              Int         @default(0)
-  createdAt         DateTime    @default(now())
+  special_condition String?            @default("Nenhuma")
+  adoption          Boolean            @default(true)
+  like              Int                @default(0)
+  createdAt         DateTime           @default(now())
   
-  // Relacionamentos
   userPetId         Int         
-  userPet           UserPet     @relation(fields: [userPetId], references: [id], onDelete: Cascade)
+  userPet           UserPet            @relation(fields: [userPetId], references: [id], onDelete: Cascade)
 
   address           PetAddress?
   images            PetImage[] 
+  adoptionRequests  AdoptionRequest[]
 }
 
 model PetImage {
@@ -45,7 +46,6 @@ model PetImage {
   path       String
   createdAt  DateTime @default(now())
 
-  // Relacionamento com Pet
   petId      Int     
   pet        Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
 }
@@ -60,8 +60,22 @@ model PetAddress {
   state      String
   createdAt  DateTime @default(now())
 
-  // Relacionamento com Pet (um-para-um)
   petId      Int      @unique 
   pet        Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
 }
 
+model AdoptionRequest {
+  id           Int             @id @default(autoincrement())
+  pet          Pet             @relation(fields: [petId], references: [id], onDelete: Cascade)
+  petId        Int
+  requester    UserPet         @relation(fields: [requesterId], references: [idCognito], onDelete: Cascade)
+  requesterId  String
+  status       AdoptionStatus  @default(PENDING)
+  createdAt    DateTime        @default(now())
+}
+
+enum AdoptionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

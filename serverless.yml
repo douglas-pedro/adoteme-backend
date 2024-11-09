@@ -73,6 +73,30 @@ functions:
       - http:
           path: get-pets
           method: post
+  createAdoptionRequest:
+    handler: src/pet/create-adoption-request.createAdoptionRequest
+    events:
+      - http:
+          path: pets/{id}/adoption-requests
+          method: post
+  listAdoptionRequests:
+    handler: src/pet/list-adoption-requests.listAdoptionRequests
+    events:
+      - http:
+          path: pets/adoption-requests
+          method: post
+  approveAdoptionRequest:
+    handler: src/pet/approve-adoption-request.approveAdoptionRequest
+    events:
+      - http:
+          path: adoption-requests/{requestId}/approve
+          method: post
+  rejectAdoptionRequest:
+    handler: src/pet/reject-adoption-request.rejectAdoptionRequest
+    events:
+      - http:
+          path: adoption-requests/{requestId}/reject
+          method: post
 
 plugins:
   - serverless-dotenv-plugin
