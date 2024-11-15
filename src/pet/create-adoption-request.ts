@@ -38,11 +38,17 @@ export const createAdoptionRequest = async (
       }
     }
 
+    const userRequest = await prisma.userPet.findUnique({
+      where: { idCognito: requesterId },
+    })
+
+    console.log('XXXXX', userRequest)
+
     // Criar a solicitação de adoção
     const adoptionRequest = await prisma.adoptionRequest.create({
       data: {
         petId: pet.id,
-        requesterId: requesterId,
+        requesterId: String(requesterId),
         status: 'PENDING',
       },
     })

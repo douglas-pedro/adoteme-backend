@@ -10,6 +10,8 @@ export const listAdoptionRequests = async (
   try {
     const { ownerId } = JSON.parse(event.body || '{}')
 
+    console.log(ownerId)
+
     if (!ownerId) {
       return {
         statusCode: 400,
@@ -17,26 +19,16 @@ export const listAdoptionRequests = async (
       }
     }
 
-    const userId = await prisma.userPet.findMany({
-      where: { idCognito: ownerId },
-    })
-
-    const pets = await prisma.adoptionRequest.findMany({
-      where: { requesterId: ownerId },
-    })
-
-    // Verifica se existe ao menos um pet e acessa `petId` com segurança
-    const idPet = pets.length > 0 ? pets[0].petId : null
-
-    // Obter os pets do usuário que possuem solicitações de adoção pendentes
-    const petsWithRequests = await prisma.pet.findMany({
+    const petsWithRequests = await prisma.userPet.findMany({
       where: {
-        id: Number(idPet),
+        idCognito: ownerId,
       },
       include: {
-        adoptionRequests: {
-          where: { status: 'PENDING' },
-          include: { requester: true },
+        pets: {
+          include: {
+            adoptionRequests: true,
+            images: true,
+          },
         },
       },
     })

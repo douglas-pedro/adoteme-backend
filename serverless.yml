@@ -85,6 +85,12 @@ functions:
       - http:
           path: pets/adoption-requests
           method: post
+  getlistAdoptionRequests:
+    handler: src/pet/list-adoption-request-users.handler
+    events:
+      - http:
+          path: pets/adoption-requests/{petId}
+          method: get
   approveAdoptionRequest:
     handler: src/pet/approve-adoption-request.approveAdoptionRequest
     events:
