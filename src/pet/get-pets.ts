@@ -74,6 +74,7 @@ export const listPets: APIGatewayProxyHandler = async (event) => {
         images: true,
         userPet: true,
         adoptionRequests: true,
+        likes: true,
       },
       take: limit,
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),

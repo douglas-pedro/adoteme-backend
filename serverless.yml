@@ -79,6 +79,12 @@ functions:
       - http:
           path: pets/{id}/adoption-requests
           method: post
+  removeAdoptionRequest:
+    handler: src/pet/remove-adoption-request.removeAdoptionRequest
+    events:
+      - http:
+          path: pets/remove-request/{id}
+          method: delete
   listAdoptionRequests:
     handler: src/pet/list-adoption-requests.listAdoptionRequests
     events:
@@ -91,6 +97,12 @@ functions:
       - http:
           path: pets/adoption-requests/{petId}
           method: get
+  likePet:
+    handler: src/pet/create-like-pet.likePet
+    events:
+      - http:
+          path: pets/like
+          method: post
   approveAdoptionRequest:
     handler: src/pet/approve-adoption-request.approveAdoptionRequest
     events:

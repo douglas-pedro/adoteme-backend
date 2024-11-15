@@ -3,13 +3,18 @@ import { APIGatewayEvent, Context, APIGatewayProxyResult } from 'aws-lambda'
 
 const prisma = new PrismaClient()
 
+interface ApproveAdoptionEventBody {
+  ownerId: string
+}
+
 export const approveAdoptionRequest = async (
   event: APIGatewayEvent,
   context: Context,
 ): Promise<APIGatewayProxyResult> => {
   try {
     const requestId = event.pathParameters?.requestId
-    const ownerId = event.requestContext.authorizer?.principalId
+    const body: ApproveAdoptionEventBody = JSON.parse(event.body || '{}')
+    const { ownerId } = body
 
     if (!requestId || !ownerId) {
       return {
@@ -42,10 +47,19 @@ export const approveAdoptionRequest = async (
       }
     }
 
-    // Atualizar o status da solicitação para 'APPROVED'
+    // Aprovar a solicitação de adoção
     await prisma.adoptionRequest.update({
       where: { id: Number(requestId) },
       data: { status: 'APPROVED' },
+    })
+
+    // Rejeitar todas as outras solicitações relacionadas ao mesmo pet
+    await prisma.adoptionRequest.updateMany({
+      where: {
+        petId: adoptionRequest.petId,
+        NOT: { id: Number(requestId) }, // Excluir a solicitação aprovada
+      },
+      data: { status: 'REJECTED' },
     })
 
     // Atualizar o status de adoção do pet para false (não disponível)
@@ -56,7 +70,9 @@ export const approveAdoptionRequest = async (
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Adoption request approved' }),
+      body: JSON.stringify({
+        message: 'Adoption request approved and others rejected',
+      }),
     }
   } catch (error) {
     console.error(error)

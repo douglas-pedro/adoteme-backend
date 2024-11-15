@@ -10,7 +10,7 @@ datasource db {
 model UserPet {
   id                Int                @id @default(autoincrement())
   idCognito         String             @unique
-  pets              Pet[]    
+  pets              Pet[]   
 }
 
 model Pet {
@@ -30,6 +30,19 @@ model Pet {
   address           PetAddress?
   images            PetImage[] 
   adoptionRequests  AdoptionRequest[]
+  likes             LikesPet[]   
+}
+
+model LikesPet {
+  id          Int       @id @default(autoincrement())
+  idCognito   String   
+  petId       Int
+
+  pet         Pet       @relation(fields: [petId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime  @default(now())
+
+  @@unique([idCognito, petId]) 
 }
 
 model PetImage {
@@ -61,7 +74,7 @@ model AdoptionRequest {
   id           Int             @id @default(autoincrement())
   pet          Pet             @relation(fields: [petId], references: [id], onDelete: Cascade)
   petId        Int
-  requesterId  String          // Campo String para armazenar o idCognito diretamente
+  requesterId  String         
   status       AdoptionStatus   @default(PENDING)
   createdAt    DateTime        @default(now())
 }

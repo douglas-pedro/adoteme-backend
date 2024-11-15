@@ -19,7 +19,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       where: { id: Number(petId) },
       include: {
         adoptionRequests: {
-          select: { requesterId: true, status: true, createdAt: true },
+          select: {
+            requesterId: true,
+            status: true,
+            createdAt: true,
+            id: true,
+          },
         },
         images: true,
         address: true,
@@ -109,6 +114,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
             requester: users.find((user) => user?.id === request.requesterId),
             status: request.status,
             createdAt: request.createdAt,
+            id: request.id,
           })),
         },
       }),
